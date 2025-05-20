@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Agendamento } from '../types'
+import { useState, useEffect } from 'react'
+import type { Agendamento, Servico } from '../types'
 import { api } from '../services/api'
 
 export default function Agendamentos() {
@@ -10,23 +10,38 @@ export default function Agendamentos() {
     horario: '',
   })
 
+  const [servicos, setServicos] = useState<Servico[]>([])
+
+  useEffect(() => {
+    const fetchServicos = async () => {
+      try {
+        const response = await api.get('/servicos')
+        setServicos(response.data)
+      } catch (error: unknown) {
+        console.error('Erro ao carregar serviços', error)
+      }
+    }
+
+    fetchServicos()
+  }, [])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  try {
-    await api.post('/agendamentos', form)
-    alert('Agendamento enviado com sucesso!')
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      alert(`Erro ao agendar: ${error.message}`)
-    } else {
-      alert('Erro desconhecido ao agendar. Tente novamente.')
+    e.preventDefault()
+    try {
+      await api.post('/agendamentos', form)
+      alert('Agendamento enviado com sucesso!')
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(`Erro ao agendar: ${error.message}`)
+      } else {
+        alert('Erro desconhecido ao agendar. Tente novamente.')
+      }
     }
   }
-}
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -38,8 +53,15 @@ export default function Agendamentos() {
         </div>
 
         <div>
-          <label>ID do Serviço:</label>
-          <input name="servicoId" value={form.servicoId} onChange={handleChange} required />
+          <label>Serviço:</label>
+          <select name="servicoId" value={form.servicoId} onChange={handleChange} required>
+            <option value="">Selecione um serviço</option>
+            {servicos.map((servico) => (
+              <option key={servico.id} value={servico.id}>
+                {servico.nome}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>

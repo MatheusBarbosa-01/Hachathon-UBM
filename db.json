@@ -1,0 +1,7 @@
+{
+  "servicos": [
+    { "id": 1, "nome": "Barba", "preco": 20, "duracaoMinutos": 20 },
+    { "id": 2, "nome": "Corte", "preco": 30, "duracaoMinutos": 30 },
+    { "id": 2, "nome": "unha", "preco": 55, "duracaoMinutos": 35 }
+  ]
+}

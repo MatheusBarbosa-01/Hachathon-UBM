@@ -9,6 +9,7 @@ export default function Servicos() {
     async function fetchServicos() {
       try {
         const response = await api.get('/servicos')
+         console.log('Dados da API:', response.data)
         setServicos(response.data)
       } catch (error) {
         console.error('Erro ao buscar serviços:', error)
@@ -25,7 +26,7 @@ export default function Servicos() {
         {servicos.map((servico) => (
           <li key={servico.id}>
             <strong>{servico.nome}</strong> - R$ {servico.preco.toFixed(2)}<br />
-            {servico.descricao} ({servico.duracaoMinutos} min)
+            {servico.duracaoMinutos} min
           </li>
         ))}
       </ul>
